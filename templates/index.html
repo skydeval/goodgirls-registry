@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <title>get a goodgirls.onl handle</title>
@@ -11,59 +11,97 @@
 <meta property="og:url" content="https://goodgirls.onl/"/>
 <meta name="twitter:card" content="summary"/>
 <style>
-:root{--bg:#151515;--text:#eee;--label:#ccc;--input-bg:#1f1f1f;--input-border:#444;--purple:#a060ff;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem;text-align:center;}
-h1{font-size:1.2rem;margin-bottom:1rem;}
+:root{--bg:#151515;--text:#eee;--label:#ddd;--muted:#b0b0b0;--input-bg:#1f1f1f;--input-border:#7a7a7a;--btn-border:#888;--purple:#b77bff;--focus:#d9aaff;--danger-bg:#7a2828;--danger-hover:#8f3030;--error:#ff8a8a;}
+*{box-sizing:border-box;}
+html{color-scheme:dark;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem;text-align:center;line-height:1.5;}
+main{display:flex;flex-direction:column;align-items:center;width:100%;}
+main:focus{outline:none;}
+h1{font-size:1.25rem;margin:0 0 1rem;line-height:1.3;}
 .accent{color:var(--purple);}
 form{width:100%;max-width:360px;text-align:left;}
-label{display:block;margin-top:1rem;margin-bottom:0.3rem;color:var(--label);font-size:0.9rem;}
-input{width:100%;padding:0.55rem;border-radius:6px;background:var(--input-bg);border:1px solid var(--input-border);color:#ccc;box-sizing:border-box;}
-input::placeholder{color:#777;}
-.handle-row{display:flex;width:100%;border:1px solid var(--input-border);border-radius:6px;background:var(--input-bg);box-sizing:border-box;}
-.handle-row input{flex:1;border:none;background:transparent;padding:0.55rem;color:#ccc;}
-.suffix{padding:0.55rem;color:var(--purple);font-weight:600;white-space:nowrap;}
-button{margin-top:1.4rem;width:100%;padding:0.6rem;background:#3a3a3a;border:none;border-radius:6px;color:var(--text);font-weight:600;cursor:pointer;font-size:0.9rem;}
-.divider{width:100%;max-width:360px;margin:1.5rem 0;height:1px;background:#333;}
-.subtext{margin-top:0.5rem;font-size:0.85rem;color:#aaa;}
-.manage-btn{margin-top:1rem;padding:0.6rem;width:100%;max-width:360px;background:#2a2a2a;border:1px solid var(--input-border);border-radius:6px;color:var(--text);cursor:pointer;font-size:0.9rem;}
+label{display:block;margin-top:1rem;margin-bottom:0.3rem;color:var(--label);font-size:0.9rem;font-weight:500;}
+input{width:100%;padding:0.6rem;border-radius:6px;background:var(--input-bg);border:1px solid var(--input-border);color:#eee;font-size:1rem;font-family:inherit;min-height:44px;}
+input::placeholder{color:var(--muted);opacity:1;}
+input[aria-invalid="true"]{border-color:var(--error);}
+.handle-row{display:flex;width:100%;border:1px solid var(--input-border);border-radius:6px;background:var(--input-bg);}
+.handle-row:focus-within{outline:2px solid var(--focus);outline-offset:2px;}
+.handle-row input{flex:1;border:none;background:transparent;padding:0.6rem;color:#eee;}
+.handle-row input:focus{outline:none;}
+.handle-row[data-invalid="true"]{border-color:var(--error);}
+.suffix{padding:0.6rem;color:var(--purple);font-weight:600;white-space:nowrap;}
+button,.manage-btn{margin-top:1.4rem;width:100%;padding:0.65rem;background:#3a3a3a;border:1px solid var(--btn-border);border-radius:6px;color:var(--text);font-weight:600;cursor:pointer;font-size:0.95rem;font-family:inherit;display:block;text-align:center;text-decoration:none;min-height:44px;line-height:1.2;}
+.manage-btn{margin-top:1rem;max-width:360px;background:#2a2a2a;}
 .manage-btn:hover{background:#3a3a3a;}
-#result{margin-top:1rem;font-size:0.85rem;color:#aaa;white-space:pre-wrap;text-align:left;max-width:360px;}
-.steps{margin:0.5rem 0 0;padding-left:1.25rem;}
-.steps li{margin-bottom:0.25rem;}
+button:hover{background:#484848;}
+button[disabled]{opacity:0.55;cursor:not-allowed;}
+.divider{width:100%;max-width:360px;margin:1.5rem 0;height:1px;background:#555;}
+.subtext{margin:0.5rem 0 0;font-size:0.9rem;color:var(--muted);max-width:360px;}
+#result{margin-top:1rem;font-size:0.95rem;color:#eee;white-space:pre-wrap;text-align:left;max-width:360px;width:100%;}
+#result:empty{margin-top:0;}
+#result .err{color:var(--error);}
+.steps{margin:0.5rem 0 0;padding-left:1.5rem;}
+.steps li{margin-bottom:0.4rem;}
 .hl{font-weight:600;}
-.copy-btn{display:inline-block;width:auto;margin-left:0.4rem;margin-top:0;padding:0.1rem 0.35rem;border-radius:999px;border:1px solid var(--input-border);background:#2a2a2a;color:#eee;font-size:0.7rem;cursor:pointer;line-height:1.2;vertical-align:baseline;}
+.copy-btn{display:inline-block;width:auto;margin:0 0 0 0.4rem;padding:0.35rem 0.7rem;border-radius:999px;border:1px solid var(--btn-border);background:#2a2a2a;color:#eee;font-size:0.85rem;cursor:pointer;line-height:1.2;vertical-align:baseline;font-weight:500;min-height:28px;min-width:44px;}
 .copy-btn:hover{background:#3a3a3a;}
-.toggle-btn{margin-top:0.75rem;padding:0.35rem 0.8rem;border-radius:999px;border:1px solid var(--input-border);background:#2a2a2a;color:#eee;font-size:0.75rem;cursor:pointer;}
+.toggle-btn{display:inline-block;width:auto;margin-top:0.75rem;padding:0.5rem 1rem;border-radius:999px;border:1px solid var(--btn-border);background:#2a2a2a;color:#eee;font-size:0.85rem;cursor:pointer;font-weight:500;min-height:36px;}
 .toggle-btn:hover{background:#3a3a3a;}
+code{background:#1f1f1f;color:#eee;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.95em;}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px;}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+.field-hint{display:block;margin-top:0.25rem;font-size:0.8rem;color:var(--muted);}
+.field-error{display:none;margin-top:0.3rem;font-size:0.85rem;color:var(--error);font-weight:500;}
+.field-error[data-show="true"]{display:block;}
+.skip-link{position:absolute;top:-100px;left:0.5rem;background:var(--purple);color:#0a0a0a;padding:0.6rem 1rem;text-decoration:none;font-weight:700;border-radius:0 0 8px 8px;z-index:999;}
+.skip-link:focus{top:0;outline:2px solid var(--focus);outline-offset:2px;}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}}
 </style>
 </head>
 <body>
 
+<a class="skip-link" href="#main-content">skip to main content</a>
+
+<main id="main-content" tabindex="-1">
+
 <h1>get a <span class="accent">goodgirls.onl</span> handle</h1>
 
-<form id="f">
-  <label>current handle</label>
-  <input id="handle" placeholder="e.g. alice.bsky.social" required />
+<form id="f" aria-label="register a goodgirls.onl handle" novalidate>
+  <label for="handle">current handle</label>
+  <input id="handle" name="handle" type="text" placeholder="e.g. alice.bsky.social" required autocomplete="username" autocapitalize="none" spellcheck="false" aria-describedby="handle-hint handle-error"/>
+  <span id="handle-hint" class="field-hint">your existing bluesky handle</span>
+  <span id="handle-error" class="field-error" role="alert"></span>
 
-  <label>desired handle</label>
-  <div class="handle-row">
-    <input id="subdomain" placeholder="alice" required />
-    <span class="suffix">.goodgirls.onl</span>
+  <label for="subdomain">desired handle</label>
+  <div class="handle-row" id="subdomain-row">
+    <input id="subdomain" name="subdomain" type="text" placeholder="alice" required autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="subdomain-suffix subdomain-hint subdomain-error"/>
+    <span class="suffix" id="subdomain-suffix">.goodgirls.onl</span>
   </div>
+  <span id="subdomain-hint" class="field-hint">the part before .goodgirls.onl</span>
+  <span id="subdomain-error" class="field-error" role="alert"></span>
 
-  <button>submit</button>
+  <button type="submit" id="submitBtn">claim handle</button>
 </form>
 
-<div class="divider"></div>
+<div class="divider" role="presentation" aria-hidden="true"></div>
 
-<div class="subtext">if you want to change or delete your handle</div>
-<button class="manage-btn" onclick="location.href='/manage'">manage</button>
+<p class="subtext">if you want to change or delete your handle</p>
+<a class="manage-btn" href="/manage">manage an existing handle</a>
 
-<div id="result"></div>
+<div id="result" role="status" aria-live="polite" aria-atomic="true"></div>
+
+</main>
 
 <script>
 const f = document.getElementById("f");
 const r = document.getElementById("result");
+const handleInput = document.getElementById("handle");
+const subdomainInput = document.getElementById("subdomain");
+const subdomainRow = document.getElementById("subdomain-row");
+const handleError = document.getElementById("handle-error");
+const subdomainError = document.getElementById("subdomain-error");
+const submitBtn = document.getElementById("submitBtn");
 
 function esc(str){
   return String(str||"").replace(/[&<>"']/g, c => ({
@@ -71,21 +109,72 @@ function esc(str){
   })[c]);
 }
 
-async function copyToClipboard(text){
-  try { await navigator.clipboard.writeText(text); } catch(_) {}
+function clearFieldError(input, errEl, rowEl){
+  input.removeAttribute("aria-invalid");
+  errEl.textContent = "";
+  errEl.removeAttribute("data-show");
+  if(rowEl) rowEl.removeAttribute("data-invalid");
+}
+
+function setFieldError(input, errEl, msg, rowEl){
+  input.setAttribute("aria-invalid", "true");
+  errEl.textContent = msg;
+  errEl.setAttribute("data-show", "true");
+  if(rowEl) rowEl.setAttribute("data-invalid", "true");
+}
+
+function resetErrors(){
+  clearFieldError(handleInput, handleError);
+  clearFieldError(subdomainInput, subdomainError, subdomainRow);
+}
+
+handleInput.addEventListener("input", () => clearFieldError(handleInput, handleError));
+subdomainInput.addEventListener("input", () => clearFieldError(subdomainInput, subdomainError, subdomainRow));
+
+async function copyToClipboard(text, btn, label){
+  try {
+    await navigator.clipboard.writeText(text);
+    if(btn){
+      const prev = btn.textContent;
+      btn.textContent = "copied";
+      btn.setAttribute("aria-label", label + " — copied to clipboard");
+      setTimeout(() => {
+        btn.textContent = prev;
+        btn.setAttribute("aria-label", label);
+      }, 1500);
+    }
+  } catch(_) {
+    if(btn) btn.textContent = "copy failed";
+  }
 }
 
 f.addEventListener("submit", async e => {
   e.preventDefault();
   r.textContent = "";
   r.innerHTML = "";
+  resetErrors();
 
-  const handle = document.getElementById("handle").value.trim();
-  const sub = document.getElementById("subdomain").value.trim().toLowerCase();
-  if(!handle || !sub){ r.textContent = "please fill out all fields."; return; }
+  const handle = handleInput.value.trim();
+  const sub = subdomainInput.value.trim().toLowerCase();
 
-  const btn = f.querySelector("button");
-  btn.disabled = true;
+  let invalid = false;
+  if(!handle){
+    setFieldError(handleInput, handleError, "please enter your current bluesky handle.");
+    invalid = true;
+  }
+  if(!sub){
+    setFieldError(subdomainInput, subdomainError, "please enter the subdomain you want.", subdomainRow);
+    invalid = true;
+  }
+  if(invalid){
+    r.innerHTML = "<span class=\"err\">please fill out all required fields.</span>";
+    (handle ? subdomainInput : handleInput).focus();
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.setAttribute("aria-busy", "true");
+  submitBtn.textContent = "claiming...";
 
   try {
     const res = await fetch("/register", {
@@ -97,23 +186,26 @@ f.addEventListener("submit", async e => {
 
     if(!data.ok){
       if(data.code === "did_has_handle"){
-        r.textContent = "this bluesky account already has a goodgirls handle — use the manage page.";
+        setFieldError(handleInput, handleError, "this bluesky account already has a goodgirls handle.");
+        r.innerHTML = "<span class=\"err\">this bluesky account already has a goodgirls handle — use the manage page.</span>";
+        handleInput.focus();
       } else {
-        r.textContent = "error: " + (data.error || res.statusText);
+        const msg = data.error || res.statusText || "registration failed.";
+        r.innerHTML = "<span class=\"err\">error: " + esc(msg) + "</span>";
       }
     } else {
       const handleDisplay = data.handle || (sub + ".goodgirls.onl");
       if(data.goodgirls_key){
         const html = ""
-          + "<div><strong>handle:</strong> " + esc(handleDisplay)
-          + " <button class=\"copy-btn\" id=\"copy-handle\">copy</button></div>"
+          + "<div><strong>handle:</strong> <span>" + esc(handleDisplay) + "</span>"
+          + " <button type=\"button\" class=\"copy-btn\" id=\"copy-handle\" aria-label=\"copy handle to clipboard\">copy</button></div>"
           + "<div><strong>DID:</strong> " + esc(data.did || "") + "</div>"
           + "<div style=\"margin-top:0.75rem;\"><strong>save this secret password:</strong><br>"
-          + "<code>" + esc(data.goodgirls_key) + "</code>"
-          + " <button class=\"copy-btn\" id=\"copy-key\">copy</button></div>"
-          + "<button id=\"toggle-instructions\" class=\"toggle-btn\">show instructions</button>"
-          + "<div id=\"instructions\" style=\"display:none;margin-top:0.75rem;\">"
-          + "<div>to apply your new goodgirls handle:</div>"
+          + "<code aria-label=\"secret password\">" + esc(data.goodgirls_key) + "</code>"
+          + " <button type=\"button\" class=\"copy-btn\" id=\"copy-key\" aria-label=\"copy secret password to clipboard\">copy</button></div>"
+          + "<button type=\"button\" id=\"toggle-instructions\" class=\"toggle-btn\" aria-expanded=\"false\" aria-controls=\"instructions\">show instructions</button>"
+          + "<section id=\"instructions\" aria-label=\"how to apply your handle\" hidden style=\"margin-top:0.75rem;\">"
+          + "<p style=\"margin:0 0 0.4rem;\">to apply your new goodgirls handle:</p>"
           + "<ol class=\"steps\">"
           + "<li><span class=\"hl\">in bluesky, go to settings → account → @handle</span></li>"
           + "<li><span class=\"hl\">click \"I have my own domain\" at the bottom</span></li>"
@@ -121,28 +213,39 @@ f.addEventListener("submit", async e => {
           + "<li><span class=\"hl\">click \"no dns panel\" tab at the top</span></li>"
           + "<li><span class=\"hl\">click \"verify text file\"</span></li>"
           + "<li><span class=\"hl\">once it shows as verified, click \"update handle\"</span></li>"
-          + "</ol></div>";
+          + "</ol></section>";
         r.innerHTML = html;
 
-        document.getElementById("copy-handle")?.addEventListener("click", () => copyToClipboard(handleDisplay));
-        document.getElementById("copy-key")?.addEventListener("click", () => copyToClipboard(data.goodgirls_key));
+        const copyHandleBtn = document.getElementById("copy-handle");
+        const copyKeyBtn = document.getElementById("copy-key");
+        copyHandleBtn?.addEventListener("click", () => copyToClipboard(handleDisplay, copyHandleBtn, "copy handle to clipboard"));
+        copyKeyBtn?.addEventListener("click", () => copyToClipboard(data.goodgirls_key, copyKeyBtn, "copy secret password to clipboard"));
 
         const toggle = document.getElementById("toggle-instructions");
         const box = document.getElementById("instructions");
         toggle.addEventListener("click", () => {
-          const open = box.style.display !== "none";
-          box.style.display = open ? "none" : "block";
-          toggle.textContent = open ? "show instructions" : "hide instructions";
+          const open = !box.hasAttribute("hidden");
+          if(open){
+            box.setAttribute("hidden", "");
+            toggle.textContent = "show instructions";
+            toggle.setAttribute("aria-expanded", "false");
+          } else {
+            box.removeAttribute("hidden");
+            toggle.textContent = "hide instructions";
+            toggle.setAttribute("aria-expanded", "true");
+          }
         });
       } else {
         r.textContent = "handle: " + handleDisplay + "\nDID: " + (data.did || "");
       }
     }
   } catch (err) {
-    r.textContent = "network error: " + err;
+    r.innerHTML = "<span class=\"err\">network error: " + esc(String(err)) + "</span>";
   }
 
-  btn.disabled = false;
+  submitBtn.disabled = false;
+  submitBtn.removeAttribute("aria-busy");
+  submitBtn.textContent = "claim handle";
 });
 </script>
 

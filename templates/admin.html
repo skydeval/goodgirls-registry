@@ -1,77 +1,113 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <title>goodgirls handle console</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="csrf-token" content="{{csrf_token}}"/>
 <style>
-:root{--bg:#151515;--text:#eee;--label:#ccc;--input-bg:#1f1f1f;--input-border:#444;--purple:#a060ff;--danger:#cc4444;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem;}
-h1{font-size:1.2rem;margin-bottom:1.25rem;}
-h2{font-size:0.95rem;margin:0.75rem 0 0.25rem;}
+:root{--bg:#151515;--text:#eee;--label:#ddd;--muted:#b0b0b0;--input-bg:#1f1f1f;--input-border:#7a7a7a;--btn-border:#888;--purple:#b77bff;--danger-bg:#5a2323;--danger-hover:#7a2c2c;--danger-border:#a84040;--focus:#d9aaff;--error:#ff8a8a;}
+*{box-sizing:border-box;}
+html{color-scheme:dark;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem;line-height:1.5;}
+main{width:100%;display:flex;flex-direction:column;align-items:center;}
+main:focus{outline:none;}
+h1{font-size:1.25rem;margin:0 0 1.25rem;line-height:1.3;}
+h2{font-size:1rem;margin:1rem 0 0.35rem;}
+h2:first-of-type{margin-top:0.25rem;}
 .accent{color:var(--purple);}
-.panel{width:100%;max-width:720px;background:#181818;border-radius:10px;padding:1rem;box-sizing:border-box;}
-label{display:block;font-size:0.8rem;color:var(--label);margin-bottom:0.25rem;}
-input{width:100%;max-width:420px;padding:0.45rem;border-radius:6px;background:var(--input-bg);border:1px solid var(--input-border);color:#ccc;box-sizing:border-box;font-size:0.85rem;}
+.panel{width:100%;max-width:720px;background:#181818;border-radius:10px;padding:1rem;border:1px solid #2a2a2a;}
+label{display:block;font-size:0.9rem;color:var(--label);margin-bottom:0.3rem;font-weight:500;}
+input{width:100%;max-width:420px;padding:0.55rem;border-radius:6px;background:var(--input-bg);border:1px solid var(--input-border);color:#eee;font-size:0.95rem;font-family:inherit;min-height:40px;}
+input::placeholder{color:var(--muted);opacity:1;}
+input[aria-invalid="true"]{border-color:var(--error);}
 .controls-row{display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;margin:0.5rem 0;}
-button{padding:0.45rem 0.9rem;border-radius:6px;border:none;background:#2a2a2a;color:#fff;font-size:0.8rem;cursor:pointer;}
+button{padding:0.55rem 1rem;border-radius:6px;border:1px solid var(--btn-border);background:#2a2a2a;color:#fff;font-size:0.9rem;cursor:pointer;font-family:inherit;font-weight:500;min-height:36px;line-height:1.2;}
 button:hover{background:#3a3a3a;}
-button[disabled]{opacity:0.4;cursor:default;}
-button.danger{background:#4a1e1e;}
-button.danger:hover{background:#6a2626;}
-.status{margin-top:0.5rem;font-size:0.8rem;color:#aaa;white-space:pre-wrap;min-height:1.2em;}
-.detail{display:block;margin-top:0.25rem;font-size:0.72rem;color:#777;font-family:ui-monospace,monospace;}
-.small{font-size:0.75rem;color:#777;}
-.badge{display:inline-block;padding:0.15rem 0.45rem;font-size:0.7rem;border-radius:999px;border:1px solid var(--input-border);color:#aaa;}
-.table-wrap{margin-top:0.75rem;max-height:60vh;overflow:auto;border:1px solid #252525;border-radius:8px;}
-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+button[disabled]{opacity:0.55;cursor:not-allowed;}
+button.danger{background:var(--danger-bg);border-color:var(--danger-border);}
+button.danger:hover{background:var(--danger-hover);}
+.status{margin-top:1rem;padding:0.5rem 0.75rem;font-size:0.95rem;color:#eee;white-space:pre-wrap;min-height:2.5em;background:#1c1c1c;border:1px solid #333;border-radius:6px;}
+.status[data-kind="error"]{color:var(--error);border-color:#a04040;}
+.detail{display:block;margin-top:0.35rem;font-size:0.85rem;color:var(--muted);font-family:ui-monospace,monospace;}
+.small{font-size:0.9rem;color:var(--muted);margin:0.25rem 0;}
+.field-error{display:none;margin-top:0.3rem;font-size:0.9rem;color:var(--error);font-weight:500;}
+.field-error[data-show="true"]{display:block;}
+.badge{display:inline-block;padding:0.25rem 0.6rem;font-size:0.8rem;border-radius:999px;border:1px solid var(--btn-border);color:#eee;background:#1c1c1c;}
+.table-wrap{margin-top:0.75rem;max-height:60vh;overflow:auto;border:1px solid #444;border-radius:8px;}
+table{width:100%;border-collapse:collapse;font-size:0.9rem;}
+caption{text-align:left;padding:0.5rem;font-size:0.85rem;color:var(--muted);caption-side:top;}
 thead{position:sticky;top:0;background:#1c1c1c;}
-th,td{padding:0.4rem 0.5rem;text-align:left;border-bottom:1px solid #222;}
+th,td{padding:0.55rem 0.6rem;text-align:left;border-bottom:1px solid #333;}
+th{font-weight:600;color:var(--label);}
 td.actions{text-align:right;}
-.version-badge{margin-top:1rem;font-size:0.7rem;color:var(--purple);text-align:right;opacity:0.8;}
+tr:focus-within{background:#202020;}
+.version-badge{margin-top:1rem;font-size:0.8rem;color:var(--purple);text-align:right;}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px;}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+.skip-link{position:absolute;top:-100px;left:0.5rem;background:var(--purple);color:#0a0a0a;padding:0.6rem 1rem;text-decoration:none;font-weight:700;border-radius:0 0 8px 8px;z-index:999;}
+.skip-link:focus{top:0;outline:2px solid var(--focus);outline-offset:2px;}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}}
 </style>
 </head>
 <body>
+
+<a class="skip-link" href="#main-content">skip to main content</a>
+
+<main id="main-content" tabindex="-1">
 
 <h1>goodgirls <span class="accent">handle</span> console</h1>
 
 <div class="panel">
 
-  <h2>handles</h2>
-  <div class="controls-row">
-    <button id="prevPage">prev</button>
-    <button id="nextPage">next</button>
-    <span class="badge" id="pageBadge">page -</span>
-    <span class="small" id="totalBadge"></span>
-  </div>
+  <section aria-labelledby="handlesHeading">
+    <h2 id="handlesHeading">handles</h2>
+    <nav class="controls-row" aria-label="handles pagination">
+      <button id="prevPage" type="button" aria-label="previous page of handles">prev</button>
+      <button id="nextPage" type="button" aria-label="next page of handles">next</button>
+      <span class="badge" id="pageBadge" aria-live="polite" aria-atomic="true">page -</span>
+      <span class="small" id="totalBadge" aria-live="polite" aria-atomic="true"></span>
+    </nav>
 
-  <div class="table-wrap" id="tableWrap" style="display:none;">
-    <table>
-      <thead><tr>
-        <th style="width:40%;">subdomain</th>
-        <th style="width:45%;">DID</th>
-        <th style="width:15%;text-align:right;">actions</th>
-      </tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
+    <div class="table-wrap" id="tableWrap" style="display:none;" tabindex="0" aria-labelledby="handlesHeading">
+      <table>
+        <caption class="sr-only">registered handles and their DIDs. use the wipe DID button in each row to remove all records for a DID.</caption>
+        <thead><tr>
+          <th scope="col" style="width:40%;">subdomain</th>
+          <th scope="col" style="width:45%;">DID</th>
+          <th scope="col" style="width:15%;text-align:right;">actions</th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </section>
 
-  <h2>danger zone</h2>
-  <p class="small">wipe a DID: removes every handle and the secret for that DID.</p>
-  <div class="controls-row">
-    <input id="wipeDidInput" placeholder="did:plc:..."/>
-    <button id="wipeDidBtn" class="danger">wipe DID</button>
-  </div>
+  <section aria-labelledby="dangerHeading">
+    <h2 id="dangerHeading">danger zone</h2>
+    <p id="wipeHint" class="small">wipe a DID: removes every handle and the secret for that DID.</p>
+    <form id="wipeForm" aria-label="wipe a DID" novalidate>
+      <div class="controls-row">
+        <label for="wipeDidInput" class="sr-only">DID to wipe</label>
+        <input id="wipeDidInput" name="wipeDid" type="text" placeholder="did:plc:..." autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="wipeHint wipeDid-error"/>
+        <button id="wipeDidBtn" type="submit" class="danger">wipe DID</button>
+      </div>
+      <span id="wipeDid-error" class="field-error" role="alert"></span>
+    </form>
+  </section>
 
-  <h2>export</h2>
-  <div class="controls-row">
-    <button id="exportBtn">download backup.json</button>
-  </div>
+  <section aria-labelledby="exportHeading">
+    <h2 id="exportHeading">export</h2>
+    <div class="controls-row">
+      <button id="exportBtn" type="button">download backup.json</button>
+    </div>
+  </section>
 
-  <div class="status" id="status">your registry spirit is humming quietly.</div>
-  <div class="version-badge">v{{version}} · goodgirls handle console</div>
+  <div class="status" id="status" role="status" aria-live="polite" aria-atomic="true">your registry spirit is humming quietly.</div>
+  <p class="version-badge">v{{version}} · goodgirls handle console</p>
 </div>
+
+</main>
 
 <script>
 const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
@@ -82,14 +118,16 @@ const pageBadge = document.getElementById("pageBadge");
 const totalBadge = document.getElementById("totalBadge");
 const prevBtn = document.getElementById("prevPage");
 const nextBtn = document.getElementById("nextPage");
+const wipeForm = document.getElementById("wipeForm");
 const wipeInput = document.getElementById("wipeDidInput");
 const wipeBtn = document.getElementById("wipeDidBtn");
+const wipeError = document.getElementById("wipeDid-error");
 const exportBtn = document.getElementById("exportBtn");
 
 const PAGE_SIZE = 50;
 let state = { offset: 0, total: 0 };
 
-function setStatus(mystical, detail){
+function setStatus(mystical, detail, kind){
   statusEl.innerHTML = "";
   statusEl.appendChild(document.createTextNode(mystical || ""));
   if(detail){
@@ -98,7 +136,21 @@ function setStatus(mystical, detail){
     d.textContent = detail;
     statusEl.appendChild(d);
   }
+  if(kind){ statusEl.setAttribute("data-kind", kind); }
+  else{ statusEl.removeAttribute("data-kind"); }
 }
+
+function clearErr(){
+  wipeInput.removeAttribute("aria-invalid");
+  wipeError.textContent = "";
+  wipeError.removeAttribute("data-show");
+}
+function setErr(msg){
+  wipeInput.setAttribute("aria-invalid", "true");
+  wipeError.textContent = msg;
+  wipeError.setAttribute("data-show", "true");
+}
+wipeInput.addEventListener("input", clearErr);
 
 async function api(path, body){
   const res = await fetch(path, {
@@ -126,13 +178,23 @@ function render(entries){
   }
   for(const row of entries){
     const tr = document.createElement("tr");
-    tr.innerHTML =
-      "<td></td><td></td><td class=\"actions\"><button class=\"danger\" data-did=\"\">wipe DID</button></td>";
-    tr.children[0].textContent = row.handle;
-    tr.children[1].textContent = row.did;
-    const btn = tr.querySelector("button");
+    const tdHandle = document.createElement("td");
+    tdHandle.textContent = row.handle;
+    const tdDid = document.createElement("td");
+    tdDid.textContent = row.did;
+    const tdActions = document.createElement("td");
+    tdActions.className = "actions";
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "danger";
+    btn.textContent = "wipe DID";
+    btn.setAttribute("aria-label", "wipe DID " + row.did + " for handle " + row.handle);
     btn.dataset.did = row.did;
     btn.addEventListener("click", () => wipeFromRow(row.did));
+    tdActions.appendChild(btn);
+    tr.appendChild(tdHandle);
+    tr.appendChild(tdDid);
+    tr.appendChild(tdActions);
     tbody.appendChild(tr);
   }
   tableWrap.style.display = "block";
@@ -150,9 +212,11 @@ async function loadPage(offset){
     totalBadge.textContent = data.total + " handle(s) total";
     prevBtn.disabled = offset === 0;
     nextBtn.disabled = offset + PAGE_SIZE >= data.total;
+    prevBtn.setAttribute("aria-disabled", prevBtn.disabled ? "true" : "false");
+    nextBtn.setAttribute("aria-disabled", nextBtn.disabled ? "true" : "false");
     setStatus("peering into page " + pageNum + " — " + data.entries.length + " handle(s) glimmer here.");
   } catch (err){
-    setStatus("the spell fizzled.", err.message);
+    setStatus("the spell fizzled.", err.message, "error");
   }
 }
 
@@ -167,31 +231,42 @@ async function wipeFromRow(did){
     setStatus("DID " + data.did + " forgotten — " + data.handles_removed + " handle(s) released.");
     await loadPage(state.offset);
   } catch (err){
-    setStatus("the unbinding failed.", err.message);
+    setStatus("the unbinding failed.", err.message, "error");
   }
 }
 
-wipeBtn.addEventListener("click", async () => {
+wipeForm.addEventListener("submit", async e => {
+  e.preventDefault();
+  clearErr();
   const did = wipeInput.value.trim();
-  if(!did){ setStatus("whisper a DID before we begin."); return; }
+  if(!did){
+    setErr("please enter a DID before wiping.");
+    setStatus("whisper a DID before we begin.", null, "error");
+    wipeInput.focus();
+    return;
+  }
   if(!confirm("wipe DID " + did + "? this removes all its handles and its key.")) return;
   try{
     wipeBtn.disabled = true;
+    wipeBtn.setAttribute("aria-busy", "true");
     setStatus("calling the void for " + did + "...");
     const data = await api("/api/admin/wipe-did", { did });
     setStatus("the void accepts — " + data.handles_removed + " handle(s) released.");
     wipeInput.value = "";
     await loadPage(state.offset);
   } catch (err){
-    setStatus("the void whispers back.", err.message);
+    setErr(err.message || "wipe failed.");
+    setStatus("the void whispers back.", err.message, "error");
   } finally {
     wipeBtn.disabled = false;
+    wipeBtn.removeAttribute("aria-busy");
   }
 });
 
 exportBtn.addEventListener("click", async () => {
   try{
     exportBtn.disabled = true;
+    exportBtn.setAttribute("aria-busy", "true");
     setStatus("gathering every thread for export...");
     const data = await api("/api/admin/export", {});
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -205,9 +280,10 @@ exportBtn.addEventListener("click", async () => {
     URL.revokeObjectURL(url);
     setStatus("export captured — " + (data.handles?.length || 0) + " handle(s), " + (data.secrets?.length || 0) + " secret(s).");
   } catch (err){
-    setStatus("the archive refused.", err.message);
+    setStatus("the archive refused.", err.message, "error");
   } finally {
     exportBtn.disabled = false;
+    exportBtn.removeAttribute("aria-busy");
   }
 });
 

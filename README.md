@@ -188,6 +188,10 @@ goodgirls was always meant to feel different. the admin console doesn't say "err
 
 this isn't whimsy for its own sake. the mystical voice is a security feature (non-enumerating responses), a personality feature (the service feels like *something*), and a design philosophy (tools should have character). the name is "goodgirls.onl" — it was never going to be utilitarian.
 
+## accessibility
+
+all pages target WCAG 2.2 Level AA compliance, reaching for AAA where practical. this includes semantic HTML5, proper label associations, aria-live regions for all dynamic content, visible focus indicators, keyboard operability, skip-to-content links, and color contrast ratios that clear AA minimums across all text and interactive elements. two AAA criteria are intentionally unmet: enhanced target size (44×44) on inline copy buttons, and enhanced contrast (7:1) on the purple accent color. both clear AA thresholds comfortably.
+
 ## design doc
 
 [DESIGN.md](DESIGN.md) contains the full design document: context, goals, data model, API surface, five adversarial review passes with 53 findings, and a decision log mapping every design choice to the finding that motivated it. if you want to understand *why* something works the way it does, that's where to look.

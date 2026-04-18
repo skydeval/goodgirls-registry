@@ -1,161 +1,284 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <title>manage your goodgirls.onl handle</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <style>
-:root{--bg:#151515;--text:#eee;--label:#ccc;--input-bg:#1f1f1f;--input-border:#444;--purple:#a060ff;--danger:#662222;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:2rem;text-align:center;}
-h1{font-size:1.2rem;margin-bottom:1rem;}
+:root{--bg:#151515;--text:#eee;--label:#ddd;--muted:#b0b0b0;--input-bg:#1f1f1f;--input-border:#7a7a7a;--btn-border:#888;--purple:#b77bff;--danger:#7a2828;--danger-hover:#8f3030;--focus:#d9aaff;--error:#ff8a8a;}
+*{box-sizing:border-box;}
+html{color-scheme:dark;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:2rem;text-align:center;line-height:1.5;}
+main{width:100%;display:flex;flex-direction:column;align-items:center;}
+main:focus{outline:none;}
+h1{font-size:1.25rem;margin:0 0 1rem;line-height:1.3;}
+h2{font-size:1rem;margin:0 0 0.5rem;}
 .accent{color:var(--purple);}
 .panel{width:100%;max-width:360px;text-align:left;}
-label{display:block;margin-top:1rem;margin-bottom:0.3rem;color:var(--label);font-size:0.9rem;}
-input{width:100%;padding:0.55rem;border-radius:6px;background:var(--input-bg);border:1px solid var(--input-border);color:#ccc;box-sizing:border-box;font-size:0.9rem;}
-input::placeholder{color:#777;}
-button{margin-top:1rem;width:100%;padding:0.6rem;background:#3a3a3a;border:none;border-radius:6px;color:var(--text);font-weight:600;cursor:pointer;font-size:0.9rem;}
-button.danger{background:var(--danger);}
-button.danger:hover{background:#7a2a2a;}
-.small{font-size:0.8rem;color:#888;margin-top:0.75rem;}
-#status{margin-top:1rem;font-size:0.9rem;color:#aaa;white-space:pre-wrap;}
-.section{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid #333;}
-.active{display:block;}
+label{display:block;margin-top:1rem;margin-bottom:0.3rem;color:var(--label);font-size:0.9rem;font-weight:500;}
+input{width:100%;padding:0.6rem;border-radius:6px;background:var(--input-bg);border:1px solid var(--input-border);color:#eee;font-size:1rem;font-family:inherit;min-height:44px;}
+input::placeholder{color:var(--muted);opacity:1;}
+input[aria-invalid="true"]{border-color:var(--error);}
+button{margin-top:1rem;width:100%;padding:0.65rem;background:#3a3a3a;border:1px solid var(--btn-border);border-radius:6px;color:var(--text);font-weight:600;cursor:pointer;font-size:0.95rem;font-family:inherit;min-height:44px;line-height:1.2;}
+button:hover{background:#484848;}
+button.danger{background:var(--danger);border-color:#a84040;}
+button.danger:hover{background:var(--danger-hover);}
+button[disabled]{opacity:0.55;cursor:not-allowed;}
+.small{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;}
+.field-hint{display:block;margin-top:0.25rem;font-size:0.85rem;color:var(--muted);}
+.field-error{display:none;margin-top:0.3rem;font-size:0.9rem;color:var(--error);font-weight:500;}
+.field-error[data-show="true"]{display:block;}
+#status{margin-top:1rem;font-size:0.95rem;color:#eee;white-space:pre-wrap;min-height:1.2em;}
+#status[data-kind="error"]{color:var(--error);}
+.section{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid #555;}
+.section.active{display:block;}
+.current-handle{font-size:1.05rem;font-weight:700;margin:0.3rem 0 0;color:var(--purple);}
+.danger-zone{margin-top:1.5rem;padding-top:1rem;border-top:1px solid #555;}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px;}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+[tabindex="-1"]:focus{outline:none;}
+.skip-link{position:absolute;top:-100px;left:0.5rem;background:var(--purple);color:#0a0a0a;padding:0.6rem 1rem;text-decoration:none;font-weight:700;border-radius:0 0 8px 8px;z-index:999;}
+.skip-link:focus{top:0;outline:2px solid var(--focus);outline-offset:2px;}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}}
 </style>
 </head>
 <body>
+
+<a class="skip-link" href="#main-content">skip to main content</a>
+
+<main id="main-content" tabindex="-1">
 
 <h1>manage your <span class="accent">goodgirls.onl</span> handle</h1>
 
 <div class="panel">
 
-  <section id="loginSection" class="active">
-    <form id="loginForm">
-      <label>your goodgirls key</label>
-      <input id="key" type="password" placeholder="your key" autocomplete="off" required />
-      <button type="submit">open the door</button>
+  <section id="loginSection" class="active" aria-labelledby="loginHeading">
+    <h2 id="loginHeading" class="sr-only">sign in with your goodgirls key</h2>
+    <form id="loginForm" aria-label="sign in with your goodgirls key" novalidate>
+      <label for="key">your goodgirls key</label>
+      <input id="key" name="key" type="password" placeholder="your key" autocomplete="current-password" required aria-describedby="key-hint key-error"/>
+      <span id="key-hint" class="field-hint">the secret password you saved when you claimed your handle</span>
+      <span id="key-error" class="field-error" role="alert"></span>
+      <button type="submit" id="loginBtn">open the door (sign in)</button>
     </form>
-    <div class="small">the garden remembers the keys it has given.</div>
+    <p class="small">the garden remembers the keys it has given.</p>
   </section>
 
-  <section id="userSection" class="section">
-    <div>you hold the key to</div>
-    <div id="currentHandle" style="font-size:1rem;font-weight:600;margin-top:0.3rem;color:var(--purple);"></div>
+  <section id="userSection" class="section" aria-labelledby="userHeading" tabindex="-1">
+    <h2 id="userHeading" class="sr-only">rename or delete your handle</h2>
+    <p>you hold the key to</p>
+    <p id="currentHandle" class="current-handle" aria-live="polite"></p>
 
-    <label>rename to</label>
-    <input id="newSub" placeholder="newname" autocomplete="off" />
-    <button id="renameBtn">rename this handle</button>
+    <form id="renameForm" aria-label="rename your handle" novalidate>
+      <label for="newSub">rename to</label>
+      <input id="newSub" name="newSub" type="text" placeholder="newname" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="newSub-hint newSub-error"/>
+      <span id="newSub-hint" class="field-hint">.goodgirls.onl will be appended</span>
+      <span id="newSub-error" class="field-error" role="alert"></span>
+      <button id="renameBtn" type="submit">rename this handle</button>
+    </form>
 
-    <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #333;">
-      <div class="small">deleting releases the handle and your key forever.</div>
-      <label>type DELETE to confirm</label>
-      <input id="confirm" placeholder="DELETE" autocomplete="off" />
-      <button id="deleteBtn" class="danger">delete this handle</button>
+    <div class="danger-zone" role="group" aria-labelledby="deleteHeading">
+      <h3 id="deleteHeading" class="sr-only">delete this handle</h3>
+      <p id="deleteWarning" class="small">deleting releases the handle and your key forever.</p>
+      <form id="deleteForm" aria-label="delete your handle" novalidate>
+        <label for="confirm">type DELETE to confirm</label>
+        <input id="confirm" name="confirm" type="text" placeholder="DELETE" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="deleteWarning confirm-error"/>
+        <span id="confirm-error" class="field-error" role="alert"></span>
+        <button id="deleteBtn" type="submit" class="danger">delete this handle permanently</button>
+      </form>
     </div>
   </section>
 
-  <div id="status"></div>
+  <div id="status" role="status" aria-live="polite" aria-atomic="true"></div>
 </div>
+
+</main>
 
 <script>
 const loginSection = document.getElementById("loginSection");
 const userSection = document.getElementById("userSection");
 const loginForm = document.getElementById("loginForm");
+const renameForm = document.getElementById("renameForm");
+const deleteForm = document.getElementById("deleteForm");
 const keyInput = document.getElementById("key");
+const keyError = document.getElementById("key-error");
 const currentHandle = document.getElementById("currentHandle");
 const newSub = document.getElementById("newSub");
+const newSubError = document.getElementById("newSub-error");
 const renameBtn = document.getElementById("renameBtn");
+const loginBtn = document.getElementById("loginBtn");
 const confirmInput = document.getElementById("confirm");
+const confirmError = document.getElementById("confirm-error");
 const deleteBtn = document.getElementById("deleteBtn");
 const statusEl = document.getElementById("status");
 
 let activeKey = null;
 
-function setStatus(msg){ statusEl.textContent = msg || ""; }
+function setStatus(msg, kind){
+  statusEl.textContent = msg || "";
+  if(kind){ statusEl.setAttribute("data-kind", kind); }
+  else{ statusEl.removeAttribute("data-kind"); }
+}
+
+function clearErr(input, errEl){
+  input.removeAttribute("aria-invalid");
+  errEl.textContent = "";
+  errEl.removeAttribute("data-show");
+}
+function setErr(input, errEl, msg){
+  input.setAttribute("aria-invalid", "true");
+  errEl.textContent = msg;
+  errEl.setAttribute("data-show", "true");
+}
+
+keyInput.addEventListener("input", () => clearErr(keyInput, keyError));
+newSub.addEventListener("input", () => clearErr(newSub, newSubError));
+confirmInput.addEventListener("input", () => clearErr(confirmInput, confirmError));
 
 function showUser(data){
   loginSection.classList.remove("active");
   userSection.classList.add("active");
   currentHandle.textContent = data.handle;
   setStatus("the garden recognizes you.");
+  userSection.focus();
+}
+
+function showLogin(){
+  userSection.classList.remove("active");
+  loginSection.classList.add("active");
+  keyInput.value = "";
+  confirmInput.value = "";
+  newSub.value = "";
+  clearErr(keyInput, keyError);
+  clearErr(newSub, newSubError);
+  clearErr(confirmInput, confirmError);
+  activeKey = null;
+  keyInput.focus();
 }
 
 loginForm.addEventListener("submit", async e => {
   e.preventDefault();
-  setStatus("consulting the hidden ledger with your sigil...");
+  clearErr(keyInput, keyError);
   const key = keyInput.value.trim();
-  if(!key){ setStatus("whisper your key first."); return; }
-
-  const res = await fetch("/manage", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ key })
-  });
-  const data = await res.json().catch(() => ({}));
-
-  if(data.ok && data.role === "admin" && data.redirect){
-    window.location.href = data.redirect;
+  if(!key){
+    setErr(keyInput, keyError, "please enter your key.");
+    setStatus("whisper your key first.", "error");
+    keyInput.focus();
     return;
   }
-  if(data.ok && data.role === "user"){
-    activeKey = key;
-    showUser(data);
-    return;
+
+  setStatus("consulting the hidden ledger with your sigil...");
+  loginBtn.disabled = true;
+  loginBtn.setAttribute("aria-busy", "true");
+
+  try {
+    const res = await fetch("/manage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if(data.ok && data.role === "admin" && data.redirect){
+      window.location.href = data.redirect;
+      return;
+    }
+    if(data.ok && data.role === "user"){
+      activeKey = key;
+      showUser(data);
+      return;
+    }
+    setErr(keyInput, keyError, "key not recognized.");
+    setStatus(data.error || "the threshold remains uncrossed.", "error");
+    keyInput.focus();
+  } catch (err) {
+    setStatus("network error: " + err, "error");
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.removeAttribute("aria-busy");
   }
-  setStatus(data.error || "the threshold remains uncrossed.");
 });
 
-renameBtn.addEventListener("click", async () => {
+renameForm.addEventListener("submit", async e => {
+  e.preventDefault();
   if(!activeKey) return;
+  clearErr(newSub, newSubError);
   const sub = newSub.value.trim().toLowerCase();
-  if(!sub){ setStatus("name the shape you'd like to wear."); return; }
+  if(!sub){
+    setErr(newSub, newSubError, "please enter the new subdomain.");
+    setStatus("name the shape you'd like to wear.", "error");
+    newSub.focus();
+    return;
+  }
 
   renameBtn.disabled = true;
+  renameBtn.setAttribute("aria-busy", "true");
   setStatus("re-weaving your thread...");
-  const res = await fetch("/manage", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ key: activeKey, action: "rename", subdomain: sub })
-  });
-  const data = await res.json().catch(() => ({}));
-  renameBtn.disabled = false;
+  try {
+    const res = await fetch("/manage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: activeKey, action: "rename", subdomain: sub })
+    });
+    const data = await res.json().catch(() => ({}));
 
-  if(data.ok){
-    const wasNoop = !!data.no_change;
-    currentHandle.textContent = data.new_handle;
-    setStatus(wasNoop
-      ? "no change — the thread is already named that."
-      : "renamed: " + data.old_handle + " → " + data.new_handle + ". the old name is released."
-    );
-    newSub.value = "";
-  } else {
-    setStatus(data.error || "the weave refused.");
+    if(data.ok){
+      const wasNoop = !!data.no_change;
+      currentHandle.textContent = data.new_handle;
+      setStatus(wasNoop
+        ? "no change — the thread is already named that."
+        : "renamed: " + data.old_handle + " → " + data.new_handle + ". the old name is released."
+      );
+      newSub.value = "";
+    } else {
+      setErr(newSub, newSubError, data.error || "rename failed.");
+      setStatus(data.error || "the weave refused.", "error");
+      newSub.focus();
+    }
+  } catch (err) {
+    setStatus("network error: " + err, "error");
+  } finally {
+    renameBtn.disabled = false;
+    renameBtn.removeAttribute("aria-busy");
   }
 });
 
-deleteBtn.addEventListener("click", async () => {
+deleteForm.addEventListener("submit", async e => {
+  e.preventDefault();
   if(!activeKey) return;
+  clearErr(confirmInput, confirmError);
   const confirmText = confirmInput.value.trim();
-  if(confirmText !== "DELETE"){ setStatus("type DELETE exactly to proceed."); return; }
+  if(confirmText !== "DELETE"){
+    setErr(confirmInput, confirmError, "type DELETE exactly (all capitals) to confirm.");
+    setStatus("type DELETE exactly to proceed.", "error");
+    confirmInput.focus();
+    return;
+  }
 
   deleteBtn.disabled = true;
+  deleteBtn.setAttribute("aria-busy", "true");
   setStatus("snipping the thread...");
-  const res = await fetch("/delete", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ key: activeKey, confirm: "DELETE" })
-  });
-  const data = await res.json().catch(() => ({}));
-  deleteBtn.disabled = false;
+  try {
+    const res = await fetch("/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: activeKey, confirm: "DELETE" })
+    });
+    const data = await res.json().catch(() => ({}));
 
-  if(data.ok){
-    userSection.classList.remove("active");
-    loginSection.classList.add("active");
-    keyInput.value = "";
-    confirmInput.value = "";
-    activeKey = null;
-    setStatus("handle " + (data.deleted_handle || "") + " is gone. the garden forgets.");
-  } else {
-    setStatus(data.error || "the scissors slipped.");
+    if(data.ok){
+      const deleted = data.deleted_handle || "";
+      showLogin();
+      setStatus("handle " + deleted + " is gone. the garden forgets.");
+    } else {
+      setStatus(data.error || "the scissors slipped.", "error");
+    }
+  } catch (err) {
+    setStatus("network error: " + err, "error");
+  } finally {
+    deleteBtn.disabled = false;
+    deleteBtn.removeAttribute("aria-busy");
   }
 });
 </script>
