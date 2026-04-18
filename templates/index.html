@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>get a goodgirls.onl handle</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="claim a cute goodgirls.onl handle for your bluesky account"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="get a goodgirls.onl handle"/>
+<meta property="og:description" content="claim a cute goodgirls.onl handle for your bluesky account"/>
+<meta property="og:url" content="https://goodgirls.onl/"/>
+<meta name="twitter:card" content="summary"/>
+<style>
+:root{--bg:#151515;--text:#eee;--label:#ccc;--input-bg:#1f1f1f;--input-border:#444;--purple:#a060ff;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem;text-align:center;}
+h1{font-size:1.2rem;margin-bottom:1rem;}
+.accent{color:var(--purple);}
+form{width:100%;max-width:360px;text-align:left;}
+label{display:block;margin-top:1rem;margin-bottom:0.3rem;color:var(--label);font-size:0.9rem;}
+input{width:100%;padding:0.55rem;border-radius:6px;background:var(--input-bg);border:1px solid var(--input-border);color:#ccc;box-sizing:border-box;}
+input::placeholder{color:#777;}
+.handle-row{display:flex;width:100%;border:1px solid var(--input-border);border-radius:6px;background:var(--input-bg);box-sizing:border-box;}
+.handle-row input{flex:1;border:none;background:transparent;padding:0.55rem;color:#ccc;}
+.suffix{padding:0.55rem;color:var(--purple);font-weight:600;white-space:nowrap;}
+button{margin-top:1.4rem;width:100%;padding:0.6rem;background:#3a3a3a;border:none;border-radius:6px;color:var(--text);font-weight:600;cursor:pointer;font-size:0.9rem;}
+.divider{width:100%;max-width:360px;margin:1.5rem 0;height:1px;background:#333;}
+.subtext{margin-top:0.5rem;font-size:0.85rem;color:#aaa;}
+.manage-btn{margin-top:1rem;padding:0.6rem;width:100%;max-width:360px;background:#2a2a2a;border:1px solid var(--input-border);border-radius:6px;color:var(--text);cursor:pointer;font-size:0.9rem;}
+.manage-btn:hover{background:#3a3a3a;}
+#result{margin-top:1rem;font-size:0.85rem;color:#aaa;white-space:pre-wrap;text-align:left;max-width:360px;}
+.steps{margin:0.5rem 0 0;padding-left:1.25rem;}
+.steps li{margin-bottom:0.25rem;}
+.hl{font-weight:600;}
+.copy-btn{display:inline-block;width:auto;margin-left:0.4rem;margin-top:0;padding:0.1rem 0.35rem;border-radius:999px;border:1px solid var(--input-border);background:#2a2a2a;color:#eee;font-size:0.7rem;cursor:pointer;line-height:1.2;vertical-align:baseline;}
+.copy-btn:hover{background:#3a3a3a;}
+.toggle-btn{margin-top:0.75rem;padding:0.35rem 0.8rem;border-radius:999px;border:1px solid var(--input-border);background:#2a2a2a;color:#eee;font-size:0.75rem;cursor:pointer;}
+.toggle-btn:hover{background:#3a3a3a;}
+</style>
+</head>
+<body>
+
+<h1>get a <span class="accent">goodgirls.onl</span> handle</h1>
+
+<form id="f">
+  <label>current handle</label>
+  <input id="handle" placeholder="e.g. alice.bsky.social" required />
+
+  <label>desired handle</label>
+  <div class="handle-row">
+    <input id="subdomain" placeholder="alice" required />
+    <span class="suffix">.goodgirls.onl</span>
+  </div>
+
+  <button>submit</button>
+</form>
+
+<div class="divider"></div>
+
+<div class="subtext">if you want to change or delete your handle</div>
+<button class="manage-btn" onclick="location.href='/manage'">manage</button>
+
+<div id="result"></div>
+
+<script>
+const f = document.getElementById("f");
+const r = document.getElementById("result");
+
+function esc(str){
+  return String(str||"").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+  })[c]);
+}
+
+async function copyToClipboard(text){
+  try { await navigator.clipboard.writeText(text); } catch(_) {}
+}
+
+f.addEventListener("submit", async e => {
+  e.preventDefault();
+  r.textContent = "";
+  r.innerHTML = "";
+
+  const handle = document.getElementById("handle").value.trim();
+  const sub = document.getElementById("subdomain").value.trim().toLowerCase();
+  if(!handle || !sub){ r.textContent = "please fill out all fields."; return; }
+
+  const btn = f.querySelector("button");
+  btn.disabled = true;
+
+  try {
+    const res = await fetch("/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ handle, subdomain: sub })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if(!data.ok){
+      if(data.code === "did_has_handle"){
+        r.textContent = "this bluesky account already has a goodgirls handle — use the manage page.";
+      } else {
+        r.textContent = "error: " + (data.error || res.statusText);
+      }
+    } else {
+      const handleDisplay = data.handle || (sub + ".goodgirls.onl");
+      if(data.goodgirls_key){
+        const html = ""
+          + "<div><strong>handle:</strong> " + esc(handleDisplay)
+          + " <button class=\"copy-btn\" id=\"copy-handle\">copy</button></div>"
+          + "<div><strong>DID:</strong> " + esc(data.did || "") + "</div>"
+          + "<div style=\"margin-top:0.75rem;\"><strong>save this secret password:</strong><br>"
+          + "<code>" + esc(data.goodgirls_key) + "</code>"
+          + " <button class=\"copy-btn\" id=\"copy-key\">copy</button></div>"
+          + "<button id=\"toggle-instructions\" class=\"toggle-btn\">show instructions</button>"
+          + "<div id=\"instructions\" style=\"display:none;margin-top:0.75rem;\">"
+          + "<div>to apply your new goodgirls handle:</div>"
+          + "<ol class=\"steps\">"
+          + "<li><span class=\"hl\">in bluesky, go to settings → account → @handle</span></li>"
+          + "<li><span class=\"hl\">click \"I have my own domain\" at the bottom</span></li>"
+          + "<li><span class=\"hl\">in the box at the top, type </span><code>" + esc(handleDisplay) + "</code></li>"
+          + "<li><span class=\"hl\">click \"no dns panel\" tab at the top</span></li>"
+          + "<li><span class=\"hl\">click \"verify text file\"</span></li>"
+          + "<li><span class=\"hl\">once it shows as verified, click \"update handle\"</span></li>"
+          + "</ol></div>";
+        r.innerHTML = html;
+
+        document.getElementById("copy-handle")?.addEventListener("click", () => copyToClipboard(handleDisplay));
+        document.getElementById("copy-key")?.addEventListener("click", () => copyToClipboard(data.goodgirls_key));
+
+        const toggle = document.getElementById("toggle-instructions");
+        const box = document.getElementById("instructions");
+        toggle.addEventListener("click", () => {
+          const open = box.style.display !== "none";
+          box.style.display = open ? "none" : "block";
+          toggle.textContent = open ? "show instructions" : "hide instructions";
+        });
+      } else {
+        r.textContent = "handle: " + handleDisplay + "\nDID: " + (data.did || "");
+      }
+    }
+  } catch (err) {
+    r.textContent = "network error: " + err;
+  }
+
+  btn.disabled = false;
+});
+</script>
+
+</body>
+</html>

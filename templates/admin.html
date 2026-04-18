@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>goodgirls handle console</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="csrf-token" content="{{csrf_token}}"/>
+<style>
+:root{--bg:#151515;--text:#eee;--label:#ccc;--input-bg:#1f1f1f;--input-border:#444;--purple:#a060ff;--danger:#cc4444;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem;}
+h1{font-size:1.2rem;margin-bottom:1.25rem;}
+h2{font-size:0.95rem;margin:0.75rem 0 0.25rem;}
+.accent{color:var(--purple);}
+.panel{width:100%;max-width:720px;background:#181818;border-radius:10px;padding:1rem;box-sizing:border-box;}
+label{display:block;font-size:0.8rem;color:var(--label);margin-bottom:0.25rem;}
+input{width:100%;max-width:420px;padding:0.45rem;border-radius:6px;background:var(--input-bg);border:1px solid var(--input-border);color:#ccc;box-sizing:border-box;font-size:0.85rem;}
+.controls-row{display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;margin:0.5rem 0;}
+button{padding:0.45rem 0.9rem;border-radius:6px;border:none;background:#2a2a2a;color:#fff;font-size:0.8rem;cursor:pointer;}
+button:hover{background:#3a3a3a;}
+button[disabled]{opacity:0.4;cursor:default;}
+button.danger{background:#4a1e1e;}
+button.danger:hover{background:#6a2626;}
+.status{margin-top:0.5rem;font-size:0.8rem;color:#aaa;white-space:pre-wrap;min-height:1.2em;}
+.detail{display:block;margin-top:0.25rem;font-size:0.72rem;color:#777;font-family:ui-monospace,monospace;}
+.small{font-size:0.75rem;color:#777;}
+.badge{display:inline-block;padding:0.15rem 0.45rem;font-size:0.7rem;border-radius:999px;border:1px solid var(--input-border);color:#aaa;}
+.table-wrap{margin-top:0.75rem;max-height:60vh;overflow:auto;border:1px solid #252525;border-radius:8px;}
+table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+thead{position:sticky;top:0;background:#1c1c1c;}
+th,td{padding:0.4rem 0.5rem;text-align:left;border-bottom:1px solid #222;}
+td.actions{text-align:right;}
+.version-badge{margin-top:1rem;font-size:0.7rem;color:var(--purple);text-align:right;opacity:0.8;}
+</style>
+</head>
+<body>
+
+<h1>goodgirls <span class="accent">handle</span> console</h1>
+
+<div class="panel">
+
+  <h2>handles</h2>
+  <div class="controls-row">
+    <button id="prevPage">prev</button>
+    <button id="nextPage">next</button>
+    <span class="badge" id="pageBadge">page -</span>
+    <span class="small" id="totalBadge"></span>
+  </div>
+
+  <div class="table-wrap" id="tableWrap" style="display:none;">
+    <table>
+      <thead><tr>
+        <th style="width:40%;">subdomain</th>
+        <th style="width:45%;">DID</th>
+        <th style="width:15%;text-align:right;">actions</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <h2>danger zone</h2>
+  <p class="small">wipe a DID: removes every handle and the secret for that DID.</p>
+  <div class="controls-row">
+    <input id="wipeDidInput" placeholder="did:plc:..."/>
+    <button id="wipeDidBtn" class="danger">wipe DID</button>
+  </div>
+
+  <h2>export</h2>
+  <div class="controls-row">
+    <button id="exportBtn">download backup.json</button>
+  </div>
+
+  <div class="status" id="status">your registry spirit is humming quietly.</div>
+  <div class="version-badge">v{{version}} · goodgirls handle console</div>
+</div>
+
+<script>
+const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+const statusEl = document.getElementById("status");
+const tbody = document.getElementById("tbody");
+const tableWrap = document.getElementById("tableWrap");
+const pageBadge = document.getElementById("pageBadge");
+const totalBadge = document.getElementById("totalBadge");
+const prevBtn = document.getElementById("prevPage");
+const nextBtn = document.getElementById("nextPage");
+const wipeInput = document.getElementById("wipeDidInput");
+const wipeBtn = document.getElementById("wipeDidBtn");
+const exportBtn = document.getElementById("exportBtn");
+
+const PAGE_SIZE = 50;
+let state = { offset: 0, total: 0 };
+
+function setStatus(mystical, detail){
+  statusEl.innerHTML = "";
+  statusEl.appendChild(document.createTextNode(mystical || ""));
+  if(detail){
+    const d = document.createElement("span");
+    d.className = "detail";
+    d.textContent = detail;
+    statusEl.appendChild(d);
+  }
+}
+
+async function api(path, body){
+  const res = await fetch(path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": CSRF
+    },
+    body: JSON.stringify(body || {})
+  });
+  const data = await res.json().catch(() => ({}));
+  if(!data.ok){
+    const err = new Error(data.error || res.statusText);
+    err.detail = data.detail;
+    throw err;
+  }
+  return data;
+}
+
+function render(entries){
+  tbody.innerHTML = "";
+  if(!entries.length){
+    tableWrap.style.display = "none";
+    return;
+  }
+  for(const row of entries){
+    const tr = document.createElement("tr");
+    tr.innerHTML =
+      "<td></td><td></td><td class=\"actions\"><button class=\"danger\" data-did=\"\">wipe DID</button></td>";
+    tr.children[0].textContent = row.handle;
+    tr.children[1].textContent = row.did;
+    const btn = tr.querySelector("button");
+    btn.dataset.did = row.did;
+    btn.addEventListener("click", () => wipeFromRow(row.did));
+    tbody.appendChild(tr);
+  }
+  tableWrap.style.display = "block";
+}
+
+async function loadPage(offset){
+  try{
+    setStatus("consulting the ledger...");
+    const data = await api("/api/admin/list", { offset, limit: PAGE_SIZE });
+    state.offset = offset;
+    state.total = data.total;
+    render(data.entries);
+    const pageNum = Math.floor(offset / PAGE_SIZE) + 1;
+    pageBadge.textContent = "page " + pageNum;
+    totalBadge.textContent = data.total + " handle(s) total";
+    prevBtn.disabled = offset === 0;
+    nextBtn.disabled = offset + PAGE_SIZE >= data.total;
+    setStatus("peering into page " + pageNum + " — " + data.entries.length + " handle(s) glimmer here.");
+  } catch (err){
+    setStatus("the spell fizzled.", err.message);
+  }
+}
+
+prevBtn.addEventListener("click", () => loadPage(Math.max(0, state.offset - PAGE_SIZE)));
+nextBtn.addEventListener("click", () => loadPage(state.offset + PAGE_SIZE));
+
+async function wipeFromRow(did){
+  if(!confirm("sever all goodgirls records for " + did + "?")) return;
+  try{
+    setStatus("severing " + did + " from the weave...");
+    const data = await api("/api/admin/wipe-did", { did });
+    setStatus("DID " + data.did + " forgotten — " + data.handles_removed + " handle(s) released.");
+    await loadPage(state.offset);
+  } catch (err){
+    setStatus("the unbinding failed.", err.message);
+  }
+}
+
+wipeBtn.addEventListener("click", async () => {
+  const did = wipeInput.value.trim();
+  if(!did){ setStatus("whisper a DID before we begin."); return; }
+  if(!confirm("wipe DID " + did + "? this removes all its handles and its key.")) return;
+  try{
+    wipeBtn.disabled = true;
+    setStatus("calling the void for " + did + "...");
+    const data = await api("/api/admin/wipe-did", { did });
+    setStatus("the void accepts — " + data.handles_removed + " handle(s) released.");
+    wipeInput.value = "";
+    await loadPage(state.offset);
+  } catch (err){
+    setStatus("the void whispers back.", err.message);
+  } finally {
+    wipeBtn.disabled = false;
+  }
+});
+
+exportBtn.addEventListener("click", async () => {
+  try{
+    exportBtn.disabled = true;
+    setStatus("gathering every thread for export...");
+    const data = await api("/api/admin/export", {});
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "goodgirls-export-" + new Date().toISOString().slice(0,10) + ".json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setStatus("export captured — " + (data.handles?.length || 0) + " handle(s), " + (data.secrets?.length || 0) + " secret(s).");
+  } catch (err){
+    setStatus("the archive refused.", err.message);
+  } finally {
+    exportBtn.disabled = false;
+  }
+});
+
+loadPage(0);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>manage your goodgirls.onl handle</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+:root{--bg:#151515;--text:#eee;--label:#ccc;--input-bg:#1f1f1f;--input-border:#444;--purple:#a060ff;--danger:#662222;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:2rem;text-align:center;}
+h1{font-size:1.2rem;margin-bottom:1rem;}
+.accent{color:var(--purple);}
+.panel{width:100%;max-width:360px;text-align:left;}
+label{display:block;margin-top:1rem;margin-bottom:0.3rem;color:var(--label);font-size:0.9rem;}
+input{width:100%;padding:0.55rem;border-radius:6px;background:var(--input-bg);border:1px solid var(--input-border);color:#ccc;box-sizing:border-box;font-size:0.9rem;}
+input::placeholder{color:#777;}
+button{margin-top:1rem;width:100%;padding:0.6rem;background:#3a3a3a;border:none;border-radius:6px;color:var(--text);font-weight:600;cursor:pointer;font-size:0.9rem;}
+button.danger{background:var(--danger);}
+button.danger:hover{background:#7a2a2a;}
+.small{font-size:0.8rem;color:#888;margin-top:0.75rem;}
+#status{margin-top:1rem;font-size:0.9rem;color:#aaa;white-space:pre-wrap;}
+.section{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid #333;}
+.active{display:block;}
+</style>
+</head>
+<body>
+
+<h1>manage your <span class="accent">goodgirls.onl</span> handle</h1>
+
+<div class="panel">
+
+  <section id="loginSection" class="active">
+    <form id="loginForm">
+      <label>your goodgirls key</label>
+      <input id="key" type="password" placeholder="your key" autocomplete="off" required />
+      <button type="submit">open the door</button>
+    </form>
+    <div class="small">the garden remembers the keys it has given.</div>
+  </section>
+
+  <section id="userSection" class="section">
+    <div>you hold the key to</div>
+    <div id="currentHandle" style="font-size:1rem;font-weight:600;margin-top:0.3rem;color:var(--purple);"></div>
+
+    <label>rename to</label>
+    <input id="newSub" placeholder="newname" autocomplete="off" />
+    <button id="renameBtn">rename this handle</button>
+
+    <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #333;">
+      <div class="small">deleting releases the handle and your key forever.</div>
+      <label>type DELETE to confirm</label>
+      <input id="confirm" placeholder="DELETE" autocomplete="off" />
+      <button id="deleteBtn" class="danger">delete this handle</button>
+    </div>
+  </section>
+
+  <div id="status"></div>
+</div>
+
+<script>
+const loginSection = document.getElementById("loginSection");
+const userSection = document.getElementById("userSection");
+const loginForm = document.getElementById("loginForm");
+const keyInput = document.getElementById("key");
+const currentHandle = document.getElementById("currentHandle");
+const newSub = document.getElementById("newSub");
+const renameBtn = document.getElementById("renameBtn");
+const confirmInput = document.getElementById("confirm");
+const deleteBtn = document.getElementById("deleteBtn");
+const statusEl = document.getElementById("status");
+
+let activeKey = null;
+
+function setStatus(msg){ statusEl.textContent = msg || ""; }
+
+function showUser(data){
+  loginSection.classList.remove("active");
+  userSection.classList.add("active");
+  currentHandle.textContent = data.handle;
+  setStatus("the garden recognizes you.");
+}
+
+loginForm.addEventListener("submit", async e => {
+  e.preventDefault();
+  setStatus("consulting the hidden ledger with your sigil...");
+  const key = keyInput.value.trim();
+  if(!key){ setStatus("whisper your key first."); return; }
+
+  const res = await fetch("/manage", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ key })
+  });
+  const data = await res.json().catch(() => ({}));
+
+  if(data.ok && data.role === "admin" && data.redirect){
+    window.location.href = data.redirect;
+    return;
+  }
+  if(data.ok && data.role === "user"){
+    activeKey = key;
+    showUser(data);
+    return;
+  }
+  setStatus(data.error || "the threshold remains uncrossed.");
+});
+
+renameBtn.addEventListener("click", async () => {
+  if(!activeKey) return;
+  const sub = newSub.value.trim().toLowerCase();
+  if(!sub){ setStatus("name the shape you'd like to wear."); return; }
+
+  renameBtn.disabled = true;
+  setStatus("re-weaving your thread...");
+  const res = await fetch("/manage", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ key: activeKey, action: "rename", subdomain: sub })
+  });
+  const data = await res.json().catch(() => ({}));
+  renameBtn.disabled = false;
+
+  if(data.ok){
+    const wasNoop = !!data.no_change;
+    currentHandle.textContent = data.new_handle;
+    setStatus(wasNoop
+      ? "no change — the thread is already named that."
+      : "renamed: " + data.old_handle + " → " + data.new_handle + ". the old name is released."
+    );
+    newSub.value = "";
+  } else {
+    setStatus(data.error || "the weave refused.");
+  }
+});
+
+deleteBtn.addEventListener("click", async () => {
+  if(!activeKey) return;
+  const confirmText = confirmInput.value.trim();
+  if(confirmText !== "DELETE"){ setStatus("type DELETE exactly to proceed."); return; }
+
+  deleteBtn.disabled = true;
+  setStatus("snipping the thread...");
+  const res = await fetch("/delete", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ key: activeKey, confirm: "DELETE" })
+  });
+  const data = await res.json().catch(() => ({}));
+  deleteBtn.disabled = false;
+
+  if(data.ok){
+    userSection.classList.remove("active");
+    loginSection.classList.add("active");
+    keyInput.value = "";
+    confirmInput.value = "";
+    activeKey = null;
+    setStatus("handle " + (data.deleted_handle || "") + " is gone. the garden forgets.");
+  } else {
+    setStatus(data.error || "the scissors slipped.");
+  }
+});
+</script>
+
+</body>
+</html>
