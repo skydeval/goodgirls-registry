@@ -198,11 +198,7 @@ all pages target WCAG 2.2 Level AA compliance, reaching for AAA where practical.
 
 ## retrospective
 
-the original registry was my first project ever. it took me 10 hours to build, using ChatGPT alone. i learned a lot in that because i'd gone from an idea like "can i make this?" to producing a functional website in that time. and in the seven months since, i've been working on larger projects, where revisiting this to port into rust left me wanting to make it better still somehow.
-
-when i built it, like with the anarchy registry, i had not developed the non-enumeration strategy yet, so when it came to improving on this project in rust, it was a no-brainer to implement it somehow. but then i took it a step further by adding a decoy honeypot for potential hackers. the would-be admin login page, usually accessible at `/gg`, is a page with a login form which presents random messages from a pool, whether positive or negative; the purpose is almost to troll an attacker who might try to bypass security. so even if they manage to guess the password, they still get a random response, which tells them nothing about their attempt.
-
-there wasn't anything that surprised me about the adversarial review process for improving code before committing to it, because i've been utilizing that strategy in my larger projects for months; what was new was running several passes — more than just two — to check for anything extra. i hadn't considered prior that after making changes it was a new field and there may be new problems introduced by the changes, so i made sure to run several passes with this port project to see what all could be found, and i kept going until no more structural problems were found and it was all about tightening.
+For the story of building this, see [RETROSPECTIVE.md](RETROSPECTIVE.md).
 
 ## license
 
